@@ -1,0 +1,110 @@
+#  Copyright Jian Wang @ MPI-INF (c) 2023.
+import os
+import pickle
+
+import numpy as np
+import open3d
+import smplx
+
+from mmpose.data.keypoints_mapping.mano import mano_skeleton
+from mmpose.datasets.builder import build_dataset
+from mmpose.datasets.datasets.egocentric.joint_converter import dset_to_body_model
+from mmpose.datasets.pipelines import (Collect,
+                                       PreProcessHandMotion, AlignGlobalSMPLXJoints, SplitGlobalSMPLXJoints,
+                                       PreProcessMo2Cap2BodyMotion)
+from mmpose.utils.visualization.draw import draw_keypoints_3d, draw_skeleton_with_chain
+
+
+if os.name == 'nt':
+    mean_std_path = r'Z:\EgoMocap\work\EgocentricFullBody\dataset_files\egobody\global_aligned_mean_std.pkl'
+    beat_data_path = r'Z:\datasets01\nobackup\BEAT\beat_english_v0.2.1'
+else:
+    mean_std_path = '/CT/EgoMocap/work/EgocentricFullBody/dataset_files/egobody/global_aligned_mean_std.pkl'
+    beat_data_path = '/CT/datasets01/nobackup/BEAT/beat_english_v0.2.1'
+
+def try_beat_dataset(seq_id):
+    seq_len = 196
+    normalize = False
+    pipeline = [
+        AlignGlobalSMPLXJoints(align_every_joint=True),
+        SplitGlobalSMPLXJoints(smplx_joint_name='aligned_smplx_joints'),
+        PreProcessHandMotion(normalize=normalize,
+                             mean_std_path=mean_std_path),
+        PreProcessMo2Cap2BodyMotion(normalize=normalize,
+                                    mean_std_path=mean_std_path),
+        Collect(keys=['aligned_smplx_joints', 'global_smplx_joints',
+                      'mo2cap2_body_features', 'left_hand_features', 'right_hand_features',
+                      'processed_left_hand_keypoints_3d', 'processed_right_hand_keypoints_3d'],
+                meta_keys=[])
+    ]
+
+    dataset_cfg = dict(
+        type='BEATDataset',
+        data_path=beat_data_path,
+        seq_len=seq_len,
+        skip_frames=seq_len,
+        pipeline=pipeline,
+        split_sequence=False,
+        data_ids=[1],
+        test_mode=True
+    )
+
+    egobody_dataset = build_dataset(dataset_cfg)
+
+    print(f'length of dataset is: {len(egobody_dataset)}')
+
+    data_i = egobody_dataset[seq_id]
+
+    global_smplx_joints = data_i['global_smplx_joints']
+
+    aligned_smplx_joints = data_i['aligned_smplx_joints']
+
+    mo2cap2_features = data_i['mo2cap2_body_features']
+    left_hand_features = data_i['left_hand_features']
+    right_hand_features = data_i['right_hand_features']
+    if normalize:
+        # recover from mean and std
+        with open(mean_std_path, 'rb') as f:
+            global_aligned_mean_std = pickle.load(f)
+        mo2cap2_body_mean = global_aligned_mean_std['mo2cap2_body_mean']
+        mo2cap2_body_std = global_aligned_mean_std['mo2cap2_body_std']
+        mo2cap2_features = mo2cap2_features * mo2cap2_body_std + mo2cap2_body_mean
+        left_hand_mean = global_aligned_mean_std['left_hand_mean']
+        left_hand_std = global_aligned_mean_std['left_hand_std']
+        left_hand_features = left_hand_features * left_hand_std + left_hand_mean
+        right_hand_mean = global_aligned_mean_std['right_hand_mean']
+        right_hand_std = global_aligned_mean_std['right_hand_std']
+        right_hand_features = right_hand_features * right_hand_std + right_hand_mean
+
+
+    mo2cap2_idx, smplx_idx = dset_to_body_model(model_type='smplx', dset='mo2cap2')
+
+    world_coord = open3d.geometry.TriangleMesh.create_coordinate_frame(size=1)
+    for frame_id in range(0, 100, 10):
+        mo2cap2_feature = mo2cap2_features[frame_id].numpy()
+        left_hand_feature = left_hand_features[frame_id].numpy()
+        right_hand_feature = right_hand_features[frame_id].numpy()
+
+        mo2cap2_feature = mo2cap2_feature.reshape(15, 3)
+        left_hand_feature = left_hand_feature.reshape(21, 3)
+        left_hand_feature[0] *= 0
+        right_hand_feature = right_hand_feature.reshape(21, 3)
+        right_hand_feature[0] *= 0
+
+        from mmpose.data.keypoints_mapping.mo2cap2 import mo2cap2_chain
+        aligned_mo2cap2_joints_mesh = draw_skeleton_with_chain(mo2cap2_feature, mo2cap2_chain)
+        coord = open3d.geometry.TriangleMesh.create_coordinate_frame(size=1)
+        open3d.visualization.draw_geometries([aligned_mo2cap2_joints_mesh, coord])
+
+        aligned_left_hand_mesh = draw_skeleton_with_chain(left_hand_feature, mano_skeleton, keypoint_radius=0.01,
+                                                          line_radius=0.0025)
+        aligned_right_hand_mesh = draw_skeleton_with_chain(right_hand_feature, mano_skeleton, keypoint_radius=0.01,
+                                                          line_radius=0.0025)
+        coord = open3d.geometry.TriangleMesh.create_coordinate_frame(size=0.1)
+        open3d.visualization.draw_geometries([aligned_left_hand_mesh, coord])
+        open3d.visualization.draw_geometries([aligned_right_hand_mesh, coord])
+
+
+
+if __name__ == '__main__':
+    try_beat_dataset(5)
