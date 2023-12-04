@@ -64,7 +64,7 @@ class EvalDataset(Dataset):
     def evaluate(self, outputs, res_folder, save_name=None, metric=None, logger=None):
         # save the results
         if res_folder is not None:
-            print(f'save to {res_folder}')
+            print(f'\nsave to {res_folder}\n')
             with open(os.path.join(res_folder, f'outputs.pkl'), 'wb') as f:
                 pickle.dump(outputs, f)
         return {'mpjpe': 0}

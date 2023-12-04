@@ -100,7 +100,7 @@ def main():
         torch.backends.cudnn.benchmark = True
 
     # note: the model pretrained should not be set to none here.
-    print('!!!!!!!!!warning!!! The model pretrained is not set to none here!!!!!!!!!')
+    print('-----------------Modified!!! The model pretrained should not be set to none here.-----------------')
     # cfg.model.pretrained = None
     cfg.data.test.test_mode = True
 
@@ -157,7 +157,7 @@ def main():
     if args.checkpoint.lower() != 'none':
         load_checkpoint(model, args.checkpoint, map_location='cpu')
     else:
-        print('!!!!!!!!!!!!Warning: No checkpoint is loaded!!!!!!!!!!!!!!!!!!')
+        print('--------------Warning: No global checkpoint is loaded!!!--------------')
 
     if args.fuse_conv_bn:
         model = fuse_conv_bn(model)

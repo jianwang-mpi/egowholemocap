@@ -22,7 +22,7 @@ class EgoHandPose(BasePose):
     def show_result(self, **kwargs):
         pass
 
-    def __init__(self, pretrained,
+    def __init__(self, pretrained=None,
                  loss_keypoint=dict(type='MPJPELoss', use_target_weight=False),
                  ):
         super(EgoHandPose, self).__init__()

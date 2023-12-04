@@ -38,10 +38,11 @@ class Config:
     log_dir = osp.join(output_dir, 'log')
     result_dir = osp.join(output_dir, 'result')
     # human_model_path = osp.join(root_dir, 'common', 'utils', 'human_model_files')
-    if os.name == 'nt':
-        human_model_path = r'Z:\EgoMocap\work\EgocentricFullBody\human_models'
-    else:
-        human_model_path = '/CT/EgoMocap/work/EgocentricFullBody/human_models'
+    human_model_path = 'human_models'
+    # if os.name == 'nt':
+    #     human_model_path = r'Z:\EgoMocap\work\EgocentricFullBody\human_models'
+    # else:
+    #     human_model_path = '/CT/EgoMocap/work/EgocentricFullBody/human_models'
 
     def set_args(self, parts, continue_train=False):
         self.parts = parts

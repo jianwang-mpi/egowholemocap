@@ -511,22 +511,29 @@ class SplitGlobalSMPLXJoints:
         results['right_hand_keypoints_3d'] = right_hand_keypoints_3d
         return results
 
+
 @PIPELINES.register_module()
-class ExtractUncertainty:
-    def __init__(self, uncertainty_name='uncertainty',
-                 target_range=(0.995, 1)):
-        self.uncertainty_name = uncertainty_name
+class ExtractConfidence:
+    def __init__(self, confidence_name='uncertainty',
+                 target_range=(0.9995, 1)):
+        self.confidence_name = confidence_name
         self.target_range = target_range
 
     def __call__(self, results: dict) -> dict:
-        uncertainty = results[self.uncertainty_name]
+        confidence = results[self.confidence_name]
         if self.target_range is not None:
             # normalize the uncertainty value
-            min_uncertainty = uncertainty.min()
-            max_uncertainty = uncertainty.max()
-            uncertainty = (uncertainty - min_uncertainty) / (max_uncertainty - min_uncertainty)
+            min_confidence = confidence.min()
+            max_confidence = confidence.max()
+            confidence = confidence / max_confidence
             # transform it to the target range
             min_target, max_target = self.target_range
-            uncertainty = min_target + uncertainty * (max_target - min_target)
-        results[self.uncertainty_name] = uncertainty
+            confidence = min_target + confidence * (max_target - min_target)
+        # make the uncertainty value to be the same shape as the pose vector
+        # print(confidence.shape)
+        seq_len, joint_num, _ = confidence.shape
+        assert _ == 3
+        confidence = confidence.reshape(seq_len, joint_num * 3)
+
+        results[self.confidence_name] = torch.asarray(confidence).float()
         return results

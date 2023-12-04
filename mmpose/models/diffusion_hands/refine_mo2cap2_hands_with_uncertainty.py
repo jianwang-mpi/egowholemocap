@@ -19,7 +19,7 @@ from ...utils.visualization.draw import draw_skeleton_with_chain
 
 
 class RefinerJointPosition:
-    def __init__(self, joint_3d_seq, joint_3d_seq_confidence, k=1, total_timesteps=1000):
+    def __init__(self, joint_3d_seq, joint_3d_seq_confidence, k=1., total_timesteps=1000):
         self.joint_3d_seq = joint_3d_seq
         self.joint_3d_seq_confidence = joint_3d_seq_confidence
         self.k = k
@@ -84,24 +84,19 @@ class RefineEdgeDiffusionHandsUncertainty(BasePose):
         pass
 
 
-    def forward(self, mo2cap2_body_features, left_hand_features, right_hand_features, uncertainty,
+    def forward(self, mo2cap2_body_features, left_hand_features, right_hand_features, human_body_confidence,
+                left_hand_confidence, right_hand_confidence,
                 img_metas=None, return_loss=True, **kwargs):
 
         # combine all features
         features_all = torch.cat([mo2cap2_body_features, left_hand_features, right_hand_features], dim=-1)
         sample_shape = features_all.shape
 
-        assert sample_shape == uncertainty.shape
-        joint_3d_seq_confidence = uncertainty
-        # joint_3d_seq_confidence = torch.ones_like(features_all).to(features_all.device) * 2
-        # joint_3d_seq_confidence[:, :, 7 * 3: 15 * 3] = 0.998
-        # joint_3d_seq_confidence[:, :, 15 * 3:] = 0.995
-        # joint_3d_seq_confidence[:, 30: 50, 15 * 3: (15 + 21) * 3] = 0.998
-        # joint_3d_seq_confidence = torch.ones_like(features_all).to(features_all.device) * 1
-        # joint_3d_seq_confidence[:, :, 7 * 3: 15 * 3] = 0.998
-        # joint_3d_seq_confidence[:, :, 15 * 3:] = 0.998
+        joint_3d_seq_confidence = torch.cat([human_body_confidence, left_hand_confidence, right_hand_confidence], dim=-1)
+        assert sample_shape == joint_3d_seq_confidence.shape
         joint_position_refiner = RefinerJointPosition(joint_3d_seq=features_all,
-                                                      joint_3d_seq_confidence=joint_3d_seq_confidence)
+                                                      joint_3d_seq_confidence=joint_3d_seq_confidence,
+                                                      k=0.1)
         sample = self.diffusion_model.p_sample_loop(sample_shape, cond=mo2cap2_body_features,
                                                                     return_diffusion=False,
                                                                     refiner=joint_position_refiner,

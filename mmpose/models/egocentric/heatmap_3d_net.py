@@ -243,7 +243,7 @@ class Heatmap3DNet(nn.Module):
                 joint_3d_heatmap_confidence, joint_voxel, align_corners=False)
             joint_3d_heatmap_confidence = joint_3d_heatmap_confidence.view(batch_size, joint_num)
             result['keypoint_confidence'] = joint_3d_heatmap_confidence.detach().cpu().numpy()
-            print(result['keypoint_confidence'])
+            # print(result['keypoint_confidence'])
         if 'return_2d_heatmap' in self.test_cfg and self.test_cfg['return_2d_heatmap'] is True:
             # calculate confidence for each joint
             # joint_voxel shape: (batch_size, joint_number, 3)

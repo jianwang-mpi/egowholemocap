@@ -76,7 +76,7 @@ class EgocentricFullBodyPose(BasePose):
         body_pose_results = self.body_pose_module(img, img_metas=img_metas, return_loss=False, **kwargs)
         use_hand_detection_module = False
         if left_hand_img is None:
-            print('use hand detection module')
+            # print('use hand detection module')
             use_hand_detection_module = True
             hand_2d_pose_heatmaps = self.hand_detection_module(img, img_metas=img_metas, return_loss=False, **kwargs)
             crop_output_dict = self.process_hand(img, img_original, hand_2d_pose_heatmaps['output_heatmap'])

@@ -138,11 +138,18 @@ class FLAME(object):
         self.root_joint_idx = self.orig_root_joint_idx
 
 class HumanModels:
-    def __init__(self):
-        self.smplx = SMPLX()
-        self.smpl = SMPL()
-        self.mano = MANO()
-        self.flame = FLAME()
+    def __init__(self, load_smpl=False,
+                 load_mano=True,
+                 load_smplx=False,
+                 load_flame=False):
+        if load_smplx:
+            self.smplx = SMPLX()
+        if load_smpl:
+            self.smpl = SMPL()
+        if load_mano:
+            self.mano = MANO()
+        if load_flame:
+            self.flame = FLAME()
 # smpl_x = SMPLX()
 # smpl = SMPL()
 # mano = MANO()

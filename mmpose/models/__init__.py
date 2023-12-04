@@ -9,13 +9,12 @@ from .losses import *  # noqa
 from .necks import *  # noqa
 from .utils import *  # noqa
 from .egocentric import *
-from .ego_hand_detection import *
+# from .ego_hand_detection import *
 from .ego_hand_pose_estimation import *
 # from .expose import *
 from .diffusion_mdm import *
 from .ego_full_body import *
 from .diffusion_hands import *
-from .diffusion_egoego import *
 
 __all__ = [
     'BACKBONES', 'HEADS', 'NECKS', 'LOSSES', 'POSENETS', 'MESH_MODELS',

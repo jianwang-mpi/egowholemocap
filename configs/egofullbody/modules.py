@@ -1,8 +1,8 @@
 #  Copyright Jian Wang @ MPI-INF (c) 2023.
-fisheye_camera_path = '/CT/EgoMocap/work/EgocentricFullBody/mmpose/utils/fisheye_camera/fisheye.calibration_01_12.json'
+fisheye_camera_path = 'mmpose/utils/fisheye_camera/fisheye.calibration_01_12.json'
 hand_pose_model = dict(
     type='EgoHandPose',
-    pretrained='/HPS/EgoSyn/work/EgocentricHand/Hand4Whole_RELEASE/demo/hand/snapshot_12.pth.tar',
+    # pretrained='/HPS/EgoSyn/work/EgocentricHand/Hand4Whole_RELEASE/demo/hand/snapshot_12.pth.tar',
 )
 
 hand_detection_model = dict(

@@ -57,8 +57,6 @@ class FullBodyMotionTestDataset(Dataset):
 
         self.data = self.load_annotation()
 
-
-
     def __len__(self):
         return len(self.data)
 
@@ -71,9 +69,9 @@ class FullBodyMotionTestDataset(Dataset):
         pred_joints_3d_list = []
         pred_left_hand_joint_3d_list = []
         pred_right_hand_joint_3d_list = []
-        pred_joints_3d_uncertainty_list = []
-        pred_left_hand_joint_uncertainty_list = []
-        pred_right_hand_joint_uncertainty_list = []
+        pred_joints_3d_confidence_list = []
+        pred_left_hand_confidence_list = []
+        pred_right_hand_confidence_list = []
         gt_joints_3d_list = []
         ego_camera_pose_list = []
         for _, pred in enumerate(data):
@@ -88,30 +86,31 @@ class FullBodyMotionTestDataset(Dataset):
 
             # get the uncertainty
             if 'keypoint_confidence' in pred['body_pose_results'].keys():
-                uncertainty_body = pred['body_pose_results']['keypoint_confidence']
+                confidence_body = pred['body_pose_results']['keypoint_confidence']
+                confidence_body = confidence_body[:, :, None].repeat(1, 1, 3)
             else:
                 # use default uncertainty
-                uncertainty_body = np.ones_like(pred_joints_3d_item)
-                uncertainty_body[:, 8:] *= 0.9995
+                confidence_body = np.ones_like(pred_joints_3d_item)
+                confidence_body[:, 8:] *= 0.5
             if 'keypoint_confidence' in pred['left_hands_preds'].keys():
-                uncertainty_lhand = pred['left_hands_preds']['keypoint_confidence']
+                confidence_lhand = pred['left_hands_preds']['keypoint_confidence']
             else:
                 # use default uncertainty
-                uncertainty_lhand = np.ones_like(pred_left_hand_joint_item) * 0.9995
+                confidence_lhand = np.ones_like(pred_left_hand_joint_item) * 0.5
 
             if 'keypoint_confidence' in pred['right_hands_preds'].keys():
-                uncertainty_rhand = pred['right_hands_preds']['keypoint_confidence']
+                confidence_rhand = pred['right_hands_preds']['keypoint_confidence']
             else:
                 # use default uncertainty
-                uncertainty_rhand = np.ones_like(pred_right_hand_joint_item) * 0.9995
+                confidence_rhand = np.ones_like(pred_right_hand_joint_item) * 0.5
 
             pred_joints_3d_list.extend(pred_joints_3d_item)
             pred_left_hand_joint_3d_list.extend(pred_left_hand_joint_item)
             pred_right_hand_joint_3d_list.extend(pred_right_hand_joint_item)
 
-            pred_joints_3d_uncertainty_list.extend(uncertainty_body)
-            pred_left_hand_joint_uncertainty_list.extend(uncertainty_lhand)
-            pred_right_hand_joint_uncertainty_list.extend(uncertainty_rhand)
+            pred_joints_3d_confidence_list.extend(confidence_body)
+            pred_left_hand_confidence_list.extend(confidence_lhand)
+            pred_right_hand_confidence_list.extend(confidence_rhand)
             img_meta_list = pred['img_metas']
             for img_meta_item in img_meta_list:
                 ext_id = img_meta_item['ext_id']
@@ -128,6 +127,9 @@ class FullBodyMotionTestDataset(Dataset):
         pred_joints_3d_list = np.array(pred_joints_3d_list)
         pred_left_hand_joint_3d_list = np.array(pred_left_hand_joint_3d_list)
         pred_right_hand_joint_3d_list = np.array(pred_right_hand_joint_3d_list)
+        pred_joints_3d_confidence_list = np.array(pred_joints_3d_confidence_list)
+        pred_left_hand_confidence_list = np.array(pred_left_hand_confidence_list)
+        pred_right_hand_confidence_list = np.array(pred_right_hand_confidence_list)
 
         # split by seq names
         data_by_seq_name = {}
@@ -140,12 +142,19 @@ class FullBodyMotionTestDataset(Dataset):
             pred_joints_3d = pred_joints_3d_list[i]
             pred_left_hand_joint_3d = pred_left_hand_joint_3d_list[i]
             pred_right_hand_joint_3d = pred_right_hand_joint_3d_list[i]
+            pred_joints_3d_confidence = pred_joints_3d_confidence_list[i]
+            pred_left_hand_confidence = pred_left_hand_confidence_list[i]
+            pred_right_hand_confidence = pred_right_hand_confidence_list[i]
             data_by_seq_name[seq_name].append({'ext_id': ext_id,
-                                                  'ego_camera_pose': ego_camera_pose,
-                                                  'gt_joints_3d': gt_joints_3d,
-                                                  'pred_joints_3d': pred_joints_3d,
-                                                  'pred_left_hand_joint_3d': pred_left_hand_joint_3d,
-                                                  'pred_right_hand_joint_3d': pred_right_hand_joint_3d})
+                                               'ego_camera_pose': ego_camera_pose,
+                                               'gt_joints_3d': gt_joints_3d,
+                                               'pred_joints_3d': pred_joints_3d,
+                                               'pred_left_hand_joint_3d': pred_left_hand_joint_3d,
+                                               'pred_right_hand_joint_3d': pred_right_hand_joint_3d,
+                                               'pred_joints_3d_confidence': pred_joints_3d_confidence,
+                                               'pred_left_hand_confidence': pred_left_hand_confidence,
+                                               'pred_right_hand_confidence': pred_right_hand_confidence,
+                                               })
         for seq_name in data_by_seq_name.keys():
             data_by_seq_name[seq_name] = sorted(data_by_seq_name[seq_name], key=lambda x: x['ext_id'])
 
@@ -169,13 +178,18 @@ class FullBodyMotionTestDataset(Dataset):
                 pred_left_hand_joint_3d = item['pred_left_hand_joint_3d']
                 pred_right_hand_joint_3d = item['pred_right_hand_joint_3d']
 
+                pred_joints_3d_confidence = item['pred_joints_3d_confidence']
+                pred_left_hand_confidence = item['pred_left_hand_confidence']
+                pred_right_hand_confidence = item['pred_right_hand_confidence']
+
                 # note:
                 # 这里出问题了，预测的mano joint可能不是在egocentric space里面的，这个mano的joint的location其实
                 # 是受到wrist location的控制的，所以这里需要先提取出来wrist location，然后对mano joint进行处理
                 pred_left_wrist = pred_joints_3d[6: 7]
                 pred_right_wrist = pred_joints_3d[3: 4]
                 ego_pred_left_hand_joint_3d = pred_left_hand_joint_3d + pred_left_wrist - pred_left_hand_joint_3d[0: 1]
-                ego_pred_right_hand_joint_3d = pred_right_hand_joint_3d + pred_right_wrist - pred_right_hand_joint_3d[0: 1]
+                ego_pred_right_hand_joint_3d = pred_right_hand_joint_3d + pred_right_wrist - pred_right_hand_joint_3d[
+                                                                                             0: 1]
 
                 data[seq_name][i]['ext_id'] = ext_id
                 data[seq_name][i]['seq_name'] = seq_name
@@ -184,11 +198,16 @@ class FullBodyMotionTestDataset(Dataset):
                 data[seq_name][i]['ego_pred_right_hand_joint_3d'] = ego_pred_right_hand_joint_3d
 
                 transformed_pred_joints_3d = self.transform_new_body_pose(pred_joints_3d, ego_camera_pose)
-                transformed_pred_left_hand_joint_3d = self.transform_new_body_pose(ego_pred_left_hand_joint_3d, ego_camera_pose)
-                transformed_pred_right_hand_joint_3d = self.transform_new_body_pose(ego_pred_right_hand_joint_3d, ego_camera_pose)
+                transformed_pred_left_hand_joint_3d = self.transform_new_body_pose(ego_pred_left_hand_joint_3d,
+                                                                                   ego_camera_pose)
+                transformed_pred_right_hand_joint_3d = self.transform_new_body_pose(ego_pred_right_hand_joint_3d,
+                                                                                    ego_camera_pose)
                 data[seq_name][i]['global_pred_joints_3d'] = transformed_pred_joints_3d
                 data[seq_name][i]['global_pred_left_hand_joint_3d'] = transformed_pred_left_hand_joint_3d
                 data[seq_name][i]['global_pred_right_hand_joint_3d'] = transformed_pred_right_hand_joint_3d
+                data[seq_name][i]['pred_joints_3d_confidence'] = pred_joints_3d_confidence
+                data[seq_name][i]['pred_left_hand_confidence'] = pred_left_hand_confidence
+                data[seq_name][i]['pred_right_hand_confidence'] = pred_right_hand_confidence
         data_out = []
         if self.split_sequence:
             # split sequence
@@ -225,11 +244,11 @@ class FullBodyMotionTestDataset(Dataset):
         coord = open3d.geometry.TriangleMesh.create_coordinate_frame(size=1)
         from mmpose.data.keypoints_mapping.mano import mano_skeleton
         left_hand_joints_mesh = draw_skeleton_with_chain(left_hand_joints, mano_skeleton, keypoint_radius=0.01,
-                                                          line_radius=0.0025)
-        right_hand_joints_mesh = draw_skeleton_with_chain(right_hand_joints, mano_skeleton, keypoint_radius=0.01,
                                                          line_radius=0.0025)
-        open3d.visualization.draw_geometries([mo2cap2_joints_mesh, coord, left_hand_joints_mesh, right_hand_joints_mesh])
-
+        right_hand_joints_mesh = draw_skeleton_with_chain(right_hand_joints, mano_skeleton, keypoint_radius=0.01,
+                                                          line_radius=0.0025)
+        open3d.visualization.draw_geometries(
+            [mo2cap2_joints_mesh, coord, left_hand_joints_mesh, right_hand_joints_mesh])
 
     def prepare_data(self, idx):
         """Get data sample."""
@@ -238,7 +257,6 @@ class FullBodyMotionTestDataset(Dataset):
         ext_id = [data_idx[i]['ext_id'] for i in range(len_data_idx)]
         seq_name = [data_idx[i]['seq_name'] for i in range(len_data_idx)]
         # load data
-
 
         ego_pred_joints_3d = [data_idx[i]['ego_pred_joints_3d'] for i in range(len_data_idx)]
         ego_pred_left_hand_joint_3d = [data_idx[i]['ego_pred_left_hand_joint_3d'] for i in range(len_data_idx)]
@@ -268,6 +286,13 @@ class FullBodyMotionTestDataset(Dataset):
         global_pred_left_hand_joint_3d = [data_idx[i]['global_pred_left_hand_joint_3d'] for i in range(len_data_idx)]
         global_pred_right_hand_joint_3d = [data_idx[i]['global_pred_right_hand_joint_3d'] for i in range(len_data_idx)]
 
+        human_body_confidence = [data_idx[i]['pred_joints_3d_confidence'] for i in range(len_data_idx)]
+        human_body_confidence = np.asarray(human_body_confidence)
+        left_hand_confidence = [data_idx[i]['pred_left_hand_confidence'] for i in range(len_data_idx)]
+        left_hand_confidence = np.asarray(left_hand_confidence)
+        right_hand_confidence = [data_idx[i]['pred_right_hand_confidence'] for i in range(len_data_idx)]
+        right_hand_confidence = np.asarray(right_hand_confidence)
+
         global_pred_joints_3d = np.asarray(global_pred_joints_3d)
         global_pred_left_hand_joint_3d = np.asarray(global_pred_left_hand_joint_3d)
         global_pred_right_hand_joint_3d = np.asarray(global_pred_right_hand_joint_3d)
@@ -275,13 +300,17 @@ class FullBodyMotionTestDataset(Dataset):
         global_smplx_body_joints = np.zeros((len_data_idx, 145, 3))
         global_smplx_body_joints[:, self.smplx_idxs_mo2cap2] = global_pred_joints_3d[:, self.mo2cap2_idxs]
         global_smplx_body_joints[:, self.smplx_idxs_mano_left] = global_pred_left_hand_joint_3d[:, self.mano_left_idxs]
-        global_smplx_body_joints[:, self.smplx_idxs_mano_right] = global_pred_right_hand_joint_3d[:, self.mano_right_idxs]
+        global_smplx_body_joints[:, self.smplx_idxs_mano_right] = global_pred_right_hand_joint_3d[:,
+                                                                  self.mano_right_idxs]
 
         global_smplx_body_joints[:, 0] = (global_smplx_body_joints[:, 1] + global_smplx_body_joints[:, 2]) / 2.0
 
         result_dict = {
             'ego_smplx_joints': ego_smplx_body_joints,
             'global_smplx_joints': global_smplx_body_joints,
+            'human_body_confidence': human_body_confidence,
+            'left_hand_confidence': left_hand_confidence,
+            'right_hand_confidence': right_hand_confidence,
             'gt_joints_3d': gt_joints_3d_list,
             'ego_camera_pose': ego_camera_pose_list,
             'ext_id': ext_id,

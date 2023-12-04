@@ -38,7 +38,7 @@ log_config = dict(
 
 model = dict(
     type='EgocentricFullBodyPose',
-    body_pose_dict={{_base_.body_pose_model}},
+    body_pose_dict={{_base_.body_pose_model_with_uncert}},
     hand_detection_dict={{_base_.hand_detection_model}},
     hand_pose_estimation_dict={{_base_.hand_pose_model}},
     hand_process_pipeline=[dict(type='CropHandImageFisheye', fisheye_camera_path=fisheye_camera_path,
@@ -50,9 +50,9 @@ model = dict(
     test_cfg={
         'fisheye_camera_path': fisheye_camera_path,
     },
-    pretrained_body_pose='../../demo/resources/fisheyevit.pth',
-    pretrained_hand_detection='../../demo/resources/hand_detection.pth',
-    pretrained_hand_pose_estimation='../../demo/resources/hand_pose_estimation.pth',
+    pretrained_body_pose='checkpoints/fisheyevit.pth',
+    pretrained_hand_detection='checkpoints/hand_detection.pth',
+    pretrained_hand_pose_estimation='checkpoints/hand_pose_estimation.pth',
 )
 
 train_pipeline = [
@@ -86,7 +86,7 @@ test_pipeline = val_pipeline
 
 data_cfg = dict(
     num_joints=15,
-    img_dir='../../demo/resources/imgs',
+    img_dir='demo/resources/imgs',
     camera_param_path=fisheye_camera_path,
     joint_type='mo2cap2',
     image_size=[img_res, img_res],
@@ -96,10 +96,10 @@ data_cfg = dict(
 )
 
 data = dict(
-    samples_per_gpu=128,
+    samples_per_gpu=8,
     workers_per_gpu=2,
-    val_dataloader=dict(samples_per_gpu=256),
-    test_dataloader=dict(samples_per_gpu=256),
+    val_dataloader=dict(samples_per_gpu=8),
+    test_dataloader=dict(samples_per_gpu=8),
     train=dict(
         type='EvalDataset',
         data_cfg=data_cfg,
