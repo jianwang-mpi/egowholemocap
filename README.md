@@ -3,9 +3,9 @@
 This is the official implementation of the paper:
 
 Wang, Jian et al. "Egocentric Whole-Body Motion Capture with 
-FisheyeViT and Diffusion-Based Motion Refinement." (2023).
+FisheyeViT and Diffusion-Based Motion Refinement." Arxiv. (2023).
 
-[[Project Page]](https://jianwang-mpi.github.io/publication/egowholemocap/)
+[[Project Page]](https://people.mpi-inf.mpg.de/~jianwang/projects/egowholemocap/index.html)
 
 ## Installation
 
