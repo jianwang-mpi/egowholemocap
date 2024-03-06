@@ -1,11 +1,11 @@
 ## EgoWholeMocap
+### Egocentric Whole-Body Motion Capture with FisheyeViT and Diffusion-Based Motion Refinement
 
 This is the official implementation of the paper:
 
-Wang, Jian et al. "Egocentric Whole-Body Motion Capture with 
-FisheyeViT and Diffusion-Based Motion Refinement." Arxiv. (2023).
+Wang, Jian et al. "Egocentric Whole-Body Motion Capture with FisheyeViT and Diffusion-Based Motion Refinement." CVPR. (2024).
 
-[[Project Page]](https://people.mpi-inf.mpg.de/~jianwang/projects/egowholemocap/index.html)
+[[Project Page]](https://people.mpi-inf.mpg.de/~jianwang/projects/egowholemocap/index.html) [EgoWholeBody Training Dataset (Coming Soon)] [EgoWholeBody Test Dataset (Coming Soon)] [SceneEgo Test Dataset with Hand Pose Annotations (Coming Soon)]
 
 ## Installation
 
