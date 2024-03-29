@@ -5,7 +5,7 @@ This is the official implementation of the paper:
 
 Wang, Jian et al. "Egocentric Whole-Body Motion Capture with FisheyeViT and Diffusion-Based Motion Refinement." CVPR. (2024).
 
-[[Project Page]](https://people.mpi-inf.mpg.de/~jianwang/projects/egowholemocap/index.html) 
+[[Project Page]](https://people.mpi-inf.mpg.de/~jianwang/projects/egowholemocap/index.html) <-- Everything will be updated here.
 
 [[EgoWholeBody Training Dataset]](https://nextcloud.mpi-klsb.mpg.de/index.php/s/oRHwkccnYcFiSMS) 
 
@@ -149,11 +149,11 @@ There are also tutorials:
 If you find this project useful in your research, please consider cite:
 
 ```bibtex
-@inproceedings{Wang2023EgocentricWM,
+@article{wang2023egocentric,
   title={Egocentric Whole-Body Motion Capture with FisheyeViT and Diffusion-Based Motion Refinement},
-  author={Jian Wang and Zhe Cao and Diogo Carbonera Luvizon and Lingjie Liu and Kripasindhu Sarkar and Danhang Tang and Thabo Beeler and Christian Theobalt},
-  year={2023},
-  url={https://api.semanticscholar.org/CorpusID:265466150}
+  author={Wang, Jian and Cao, Zhe and Luvizon, Diogo and Liu, Lingjie and Sarkar, Kripasindhu and Tang, Danhang and Beeler, Thabo and Theobalt, Christian},
+  journal={arXiv preprint arXiv:2311.16495},
+  year={2023}
 }
 ```
 
