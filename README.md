@@ -11,6 +11,8 @@ Wang, Jian et al. "Egocentric Whole-Body Motion Capture with FisheyeViT and Diff
 
 [[EgoWholeBody Test Dataset]](https://nextcloud.mpi-klsb.mpg.de/index.php/s/LmswNPJZmpxmbaC)
 
+[[SceneEgo Hand Annotations]](https://nextcloud.mpi-klsb.mpg.de/index.php/s/5ZjtY928LPj9ERz)
+
 
 ## Installation
 
