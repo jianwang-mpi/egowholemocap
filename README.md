@@ -144,12 +144,14 @@ There are also tutorials:
 If you find this project useful in your research, please consider cite:
 
 ```bibtex
-@inproceedings{Wang2023EgocentricWM,
-  title={Egocentric Whole-Body Motion Capture with FisheyeViT and Diffusion-Based Motion Refinement},
-  author={Jian Wang and Zhe Cao and Diogo Carbonera Luvizon and Lingjie Liu and Kripasindhu Sarkar and Danhang Tang and Thabo Beeler and Christian Theobalt},
-  year={2023},
-  url={https://api.semanticscholar.org/CorpusID:265466150}
+@inproceedings{wang2024egocentric,
+  title={Egocentric whole-body motion capture with fisheyevit and diffusion-based motion refinement},
+  author={Wang, Jian and Cao, Zhe and Luvizon, Diogo and Liu, Lingjie and Sarkar, Kripasindhu and Tang, Danhang and Beeler, Thabo and Theobalt, Christian},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages={777--787},
+  year={2024}
 }
+
 ```
 
 ## License

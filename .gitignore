@@ -1,7 +1,6 @@
 # 3rd party files
 3rdparty/
 best_results/
-dataset_files/
 human_models/
 
 # Byte-compiled / optimized / DLL files
@@ -117,7 +116,6 @@ mmpose/.mim
 /data
 .vscode
 .idea
-*.pkl
 *.pkl.json
 *.log.json
 *.npy
