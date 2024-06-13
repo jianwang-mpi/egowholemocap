@@ -1,11 +1,21 @@
-## EgoWholeMocap
-### Egocentric Whole-Body Motion Capture with FisheyeViT and Diffusion-Based Motion Refinement
+# Egocentric Whole-Body Motion Capture with FisheyeViT and Diffusion-Based Motion Refinement
+
+[![](https://img.shields.io/badge/Paper-arXiv-green?style=plastic&logo=arXiv&logoColor=green)](https://arxiv.org/pdf/2311.16495.pdf)
+[![](https://img.shields.io/badge/Project-Page-blue?style=plastic&logo=githubpages&logoColor=blue)](https://people.mpi-inf.mpg.de/~jianwang/projects/egowholemocap/index.html)
+
 
 This is the official implementation of the paper:
 
 Wang, Jian et al. "Egocentric Whole-Body Motion Capture with FisheyeViT and Diffusion-Based Motion Refinement." CVPR. (2024).
 
-[[Project Page]](https://people.mpi-inf.mpg.de/~jianwang/projects/egowholemocap/index.html) [EgoWholeBody Training Dataset (Coming Soon)] [EgoWholeBody Test Dataset (Coming Soon)] [SceneEgo Test Dataset with Hand Pose Annotations (Coming Soon)]
+[[Project Page]](https://people.mpi-inf.mpg.de/~jianwang/projects/egowholemocap/index.html) <-- Everything will be updated here.
+
+[[EgoWholeBody Training Dataset]](https://nextcloud.mpi-klsb.mpg.de/index.php/s/oRHwkccnYcFiSMS) 
+
+[[EgoWholeBody Test Dataset]](https://nextcloud.mpi-klsb.mpg.de/index.php/s/LmswNPJZmpxmbaC)
+
+[[SceneEgo Hand Annotations]](https://nextcloud.mpi-klsb.mpg.de/index.php/s/5ZjtY928LPj9ERz)
+
 
 ## Installation
 
