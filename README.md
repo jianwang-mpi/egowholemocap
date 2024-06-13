@@ -114,21 +114,51 @@ python scripts/visualization_script/vis_diffusion_whole_body_result.py \
         --image_id 0
 ```
 
-## Test on SceneEgo test dataset
-
-todo...
-
-### Download the test dataset
-
-### Test the single-view whole-body pose estimation method
-
-### Test the diffusion-based whole-body motion refinement method
 
 ## Training
 
+### Prepare the training data
+
+1. Download the EgoWholeBody synthetic dataset from [NextCloud](https://nextcloud.mpi-klsb.mpg.de/index.php/s/oRHwkccnYcFiSMS).
+
+2. Unzip all of the files. The file structure should be like this:
+
+```shell
+path_to_dataset_dir
+ |-- renderpeople_adanna
+ |-- renderpeople_amit
+ |-- ......
+ |-- renderpeople_mixamo_labels_old.pkl
+ |-- ......
+```
+
 ### Train the single-frame pose estimation model
 
+1. Download the pre-trained ViT model from [here](https://nextcloud.mpi-klsb.mpg.de/index.php/s/qJWCRc8EApcpP4r) and put it under `./pretrained_models/`.
+
+2. Modify the config file `configs/egofullbody/fisheye_vit/undistort_vit_heatmap_3d.py`. Modify paths in line: 1, 19, 28, 29, 149, 150.
+
+3. Modify the paths between line 22-35 in file `mmpose\datasets\datasets\egocentric\mocap_studio_dataset.py` to the paths of SceneEgo test dataset.
+
+4. Train the model:
+
+```shell
+tools/python_train.sh configs/egofullbody/fisheye_vit/undistort_vit_heatmap_3d.py
+```
+
+### Finetune the single-frame pose estimation model on the SceneEgo training dataset
+
+1. Modify the paths in config file `configs/egofullbody/fisheye_vit/undistort_vit_heatmap_3d_finetune_size_0.2_better_init.py`.
+2. Modify the paths in file: `mmpose\datasets\datasets\egocentric\mocap_studio_finetune_dataset.py` to the SceneEgo training dataset.
+3. Finetune the model:
+
+```shell
+tools/python_train.sh configs/egofullbody/fisheye_vit/undistort_vit_heatmap_3d_finetune_size_0.2_better_init.py
+```
+
 ### Train the hand detection model
+
+todo...
 
 ### Train the hand pose estimation model
 

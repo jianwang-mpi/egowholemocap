@@ -1,4 +1,4 @@
-_base_ = ['/CT/EgoMocap/work/EgocentricFullBody/configs/_base_/default_runtime.py']
+_base_ = ['path_to_EgoWholeMocap_directory/configs/_base_/default_runtime.py']
 
 optimizer = dict(
     type='Adam',
@@ -16,7 +16,7 @@ lr_config = dict(
     step=[40, 55])
 
 evaluation = dict(
-    res_folder='/CT/EgoMocap/work/EgocentricFullBody/work_dirs/undistort_vit_heatmap_3d',
+    res_folder='/path_to_work_dirs/undistort_vit_heatmap_3d',
     metric='mpjpe',
     save_best='mpjpe',
     rule='less'
@@ -25,8 +25,8 @@ checkpoint_config = dict(interval=1)
 
 total_epochs = 10
 img_res = 256
-fisheye_camera_path = '/CT/EgoMocap/work/EgocentricFullBody/mmpose/utils/fisheye_camera/fisheye.calibration_01_12.json'
-load_from = '/CT/EgoMocap/work/EgocentricFullBody/work_dirs/vit_256x256_heatmap_3d/best_mpjpe_epoch_7.pth'
+fisheye_camera_path = '/path_to_mmpose/utils/fisheye_camera/fisheye.calibration_01_12.json'
+load_from = '/path_to_pretrained_models/best_mpjpe_epoch_7.pth'
 
 log_config = dict(
     interval=50,
@@ -146,8 +146,8 @@ data = dict(
     test_dataloader=dict(samples_per_gpu=32),
     train=dict(
         type='RenderpeopleMixamoDataset',
-        ann_file='/HPS/ScanNet/work/synthetic_dataset_egofullbody/render_people_mixamo/renderpeople_mixamo_labels_old.pkl',
-        img_prefix='/HPS/ScanNet/work/synthetic_dataset_egofullbody/render_people_mixamo',
+        ann_file='path_to_dataset_dir/renderpeople_mixamo_labels_old.pkl',
+        img_prefix='path_to_dataset_dir',
         data_cfg=data_cfg,
         pipeline=train_pipeline,
         test_mode=False,
