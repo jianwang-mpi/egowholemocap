@@ -156,14 +156,6 @@ tools/python_train.sh configs/egofullbody/fisheye_vit/undistort_vit_heatmap_3d.p
 tools/python_train.sh configs/egofullbody/fisheye_vit/undistort_vit_heatmap_3d_finetune_size_0.2_better_init.py
 ```
 
-### Train the hand detection model
-
-todo...
-
-### Train the hand pose estimation model
-
-### Train the whole-body motion diffusion model
-
 
 ## How to modify
 
