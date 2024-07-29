@@ -1,6 +1,6 @@
 #  Copyright Jian Wang @ MPI-INF (c) 2023.
 
-_base_ = ['/CT/EgoMocap/work/EgocentricFullBody/configs/_base_/default_runtime.py',
+_base_ = ['configs/_base_/default_runtime.py',
           'modules.py']
 
 optimizer = dict(
