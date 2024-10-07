@@ -76,7 +76,7 @@ human_models
 
 ### 2. Prepare the data
 
-The input data should be a image sequence in directory `./demo/resources/images/`.
+The input data should be a image sequence in directory `./demo/resources/imgs/`.
 
 For example, you can download the example sequence from [NextCloud](https://nextcloud.mpi-klsb.mpg.de/index.php/s/QNynZqQBCFppwcj), unzip the file and put it under `./demo/resources/`.
 
