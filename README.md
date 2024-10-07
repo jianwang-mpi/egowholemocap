@@ -163,7 +163,12 @@ tools/python_train.sh configs/egofullbody/fisheye_vit/undistort_vit_heatmap_3d_f
     - Modify the paths in config file `configs/egofullbody/egohand/hands4whole_train.py`.
     - `tools/python_train.sh configs/egofullbody/egohand/hands4whole_train.py`
 3. To finetune the model on EgoWholeBody:
-    - Modify the paths in 
+    - Modify the paths in config file `configs/egofullbody/egohand/hands4whole_train_synthetic.py`.
+    - `tools/python_train.sh configs/egofullbody/egohand/hands4whole_train_synthetic.py`
+
+### Test the trained single-frame hand pose estimation model
+
+See `configs/egofullbody/egofullbody_test_synthetic_fisheye.py`.
 
 
 ## How to modify
