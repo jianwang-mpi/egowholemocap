@@ -168,7 +168,8 @@ tools/python_train.sh configs/egofullbody/fisheye_vit/undistort_vit_heatmap_3d_f
 
 ### Test the trained single-frame hand pose estimation model
 
-See `configs/egofullbody/egofullbody_test_synthetic_fisheye.py`.
+- For testing on SceneEgo dataset, see `configs/egofullbody/egohand/hands4whole_test_finetuned.py`.
+- For testing on synthetic EgoWholeBody dataset, see `configs/egofullbody/egofullbody_test_synthetic_fisheye.py`.
 
 
 ## How to modify
