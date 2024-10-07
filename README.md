@@ -154,7 +154,16 @@ tools/python_train.sh configs/egofullbody/fisheye_vit/undistort_vit_heatmap_3d.p
 
 ```shell
 tools/python_train.sh configs/egofullbody/fisheye_vit/undistort_vit_heatmap_3d_finetune_size_0.2_better_init.py
-```
+``` 
+
+### Finetune the single-frame hand pose estimation model
+
+1.  Download the hand4whole model from [here](https://drive.google.com/file/d/15wYR8psO2U3ZhFYQEH1-DWc81XkWvK2Y/view?usp=sharing) (in this [github repo](https://github.com/mks0601/Hand4Whole_RELEASE/tree/Pose2Pose)).
+2.  To finetune the model on SceneEgo: 
+    - Modify the paths in config file `configs/egofullbody/egohand/hands4whole_train.py`.
+    - `tools/python_train.sh configs/egofullbody/egohand/hands4whole_train.py`
+3. To finetune the model on EgoWholeBody:
+    - Modify the paths in 
 
 
 ## How to modify
