@@ -9,9 +9,13 @@ from .global_ego_test_dataset import GlobalEgoTestDataset
 from .egopw_finetune_dataset import EgoPWFinetuneDataset
 from .mocap_studio_hand_dataset import MocapStudioHandDataset
 from .mo2cap2_test_dataset import Mo2Cap2TestDataset
+from .renderpeople_mixamo_test_dataset import RenderpeopleMixamoTestDataset
+from .renderpeople_mixamo_hand_test_dataset import RenderpeopleMixamoHandTestDataset
+from .renderpeople_mixamo_hand_train_dataset import RenderpeopleMixamoHandTrainDataset
 
 __all__ = [
     'RenderpeopleMixamoDataset', 'MocapStudioDataset', 'SyntheticSMPLDataset', 'EgoMixDataset',
     'MocapStudioFinetuneDataset', 'EvalDataset', 'Mo2Cap2Dataset', 'GlobalEgoTestDataset',
-    'EgoPWFinetuneDataset', 'MocapStudioHandDataset', 'Mo2Cap2TestDataset'
+    'EgoPWFinetuneDataset', 'MocapStudioHandDataset', 'Mo2Cap2TestDataset', 'RenderpeopleMixamoTestDataset',
+    'RenderpeopleMixamoHandTestDataset', 'RenderpeopleMixamoHandTrainDataset'
 ]
