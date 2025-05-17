@@ -8,11 +8,11 @@ This is the official implementation of the paper:
 
 Wang, Jian et al. "Egocentric Whole-Body Motion Capture with FisheyeViT and Diffusion-Based Motion Refinement." CVPR. (2024).
 
-[[Project Page]](https://people.mpi-inf.mpg.de/~jianwang/projects/egowholemocap/index.html) <-- Everything will be updated here.
+[[Project Page]](https://people.mpi-inf.mpg.de/~jianwang/projects/egowholemocap/index.html)  <--- The dataset link in the project page might have expired.
 
-[[EgoWholeBody Training Dataset]](https://nextcloud.mpi-klsb.mpg.de/index.php/s/oRHwkccnYcFiSMS) 
+[[EgoWholeBody Training Dataset]](https://edmond.mpg.de/dataset.xhtml?persistentId=doi:10.17617/3.SJYBX3) 
 
-[[EgoWholeBody Test Dataset]](https://nextcloud.mpi-klsb.mpg.de/index.php/s/LmswNPJZmpxmbaC)
+[[EgoWholeBody Test Dataset]](https://edmond.mpg.de/dataset.xhtml?persistentId=doi:10.17617/3.FSBR5V)
 
 [[SceneEgo Hand Annotations]](https://edmond.mpg.de/dataset.xhtml?persistentId=doi:10.17617/3.VCIHDO)
 
